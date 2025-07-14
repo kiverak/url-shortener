@@ -1,8 +1,8 @@
 package ru.kvrk.urlshortener.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kvrk.urlshortener.exception.ShortUrlCreationException;
 import ru.kvrk.urlshortener.exception.ShortUrlNotFoundException;
 import ru.kvrk.urlshortener.model.ShortenLink;
@@ -13,12 +13,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UrlShortenerService {
-    private static final String BASE_URL = "https://kvrk.ru/";
+    private static final String BASE_URL = "http://localhost:8083";
     private static final short ATTEMPT_NUMBER = 10;
 
     private final UrlShortenerRepo urlShortenerRepo;
 
-    @Transactional
+//    @Transactional
     public String shortUrl(String fullUrl) {
         String encodedUrl = getEncodedUrl(fullUrl);
         if (encodedUrl == null) {
@@ -48,8 +48,7 @@ public class UrlShortenerService {
     }
 
     public String getFullUrl(String shortUrl) {
-        String shortKey = shortUrl.replace(BASE_URL, "");
-        Optional<ShortenLink> firstByShortUrl = urlShortenerRepo.getFirstByShortUrl(shortKey);
-        return firstByShortUrl.map(ShortenLink::getLongUrl).orElseThrow(() -> new ShortUrlNotFoundException(shortKey));
+        Optional<ShortenLink> firstByShortUrl = urlShortenerRepo.getFirstByShortUrl(shortUrl);
+        return firstByShortUrl.map(ShortenLink::getLongUrl).orElseThrow(() -> new ShortUrlNotFoundException(shortUrl));
     }
 }

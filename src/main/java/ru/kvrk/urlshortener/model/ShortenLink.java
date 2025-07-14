@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
@@ -16,11 +17,11 @@ import java.util.UUID;
 @Setter
 public class ShortenLink extends BaseDocument {
 
-    @MongoId
+    @MongoId(FieldType.STRING)
     @Field("id")
     private UUID id = UUID.randomUUID();
 
-    @Indexed(name = "unique_short_url_idx", unique = true)
+    @Indexed(unique = true)
     @Field("short_url")
     private String shortUrl;
 

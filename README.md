@@ -1,7 +1,7 @@
 ## Cтарт через Docker вручную
 
 ### mongo container
-docker run -d --name mongo-container -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=secret mongodb/mongodb-community-server:6.0.18-ubi9
+docker run -d --name mongo-container -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo:8.0.12-rc0-noble
 
 docker stop mongo-container
 
