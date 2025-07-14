@@ -1,8 +1,8 @@
 package ru.kvrk.urlshortener.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kvrk.urlshortener.exception.ShortUrlCreationException;
 import ru.kvrk.urlshortener.exception.ShortUrlNotFoundException;
 import ru.kvrk.urlshortener.model.ShortenLink;
@@ -18,19 +18,20 @@ public class UrlShortenerService {
 
     private final UrlShortenerRepo urlShortenerRepo;
 
-//    @Transactional
-    public String shortUrl(String fullUrl) {
-        String encodedUrl = getEncodedUrl(fullUrl);
+    //    @Transactional
+    @Cacheable(value = "long_url", key = "#longUrl")
+    public String shortUrl(String longUrl) {
+        String encodedUrl = getEncodedUrl(longUrl);
         if (encodedUrl == null) {
-            throw new ShortUrlCreationException(fullUrl);
+            throw new ShortUrlCreationException(longUrl);
         }
 
         ShortenLink shortenLink = new ShortenLink();
         shortenLink.setShortUrl(encodedUrl);
-        shortenLink.setLongUrl(fullUrl);
+        shortenLink.setLongUrl(longUrl);
         urlShortenerRepo.save(shortenLink);
 
-        return BASE_URL + encodedUrl;
+        return String.format("%s/%s", BASE_URL, encodedUrl);
     }
 
     private String getEncodedUrl(String fullUrl) {
@@ -47,6 +48,7 @@ public class UrlShortenerService {
         return null;
     }
 
+    @Cacheable(value = "short_url", key = "#shortUrl")
     public String getFullUrl(String shortUrl) {
         Optional<ShortenLink> firstByShortUrl = urlShortenerRepo.getFirstByShortUrl(shortUrl);
         return firstByShortUrl.map(ShortenLink::getLongUrl).orElseThrow(() -> new ShortUrlNotFoundException(shortUrl));
