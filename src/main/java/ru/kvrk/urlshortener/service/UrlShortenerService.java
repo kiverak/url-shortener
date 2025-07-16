@@ -18,7 +18,7 @@ public class UrlShortenerService {
 
     private final UrlShortenerRepo urlShortenerRepo;
 
-    //    @Transactional
+//    @Transactional
     @Cacheable(value = "long_url", key = "#longUrl")
     public String shortUrl(String longUrl) {
         String encodedUrl = getEncodedUrl(longUrl);

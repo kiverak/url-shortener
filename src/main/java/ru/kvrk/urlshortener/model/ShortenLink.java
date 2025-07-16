@@ -18,7 +18,7 @@ import java.util.UUID;
 public class ShortenLink extends BaseDocument {
 
     @MongoId(FieldType.STRING)
-    @Field("id")
+    @Field("_id")
     private UUID id = UUID.randomUUID();
 
     @Indexed(unique = true)
