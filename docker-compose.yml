@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: registry.kvrk.ru/kiverak/url-shortener:v0
     container_name: url-shortener
     ports:
       - "8083:8083"
